@@ -370,8 +370,11 @@ class WanVideoLoraSelect:
     def INPUT_TYPES(s):
         return {
             "required": {
-               "lora": (folder_paths.get_filename_list("loras"),
-                {"tooltip": "LORA models are expected to be in ComfyUI/models/loras with .safetensors extension"}),
+               "lora": ("STRING", {
+                    "default": "",
+                    "placeholder": "lora model name (without .safetensors)",
+                    "tooltip": "LORA model name as string (placed in ComfyUI/models/loras)"
+                }),
                 "strength": ("FLOAT", {"default": 1.0, "min": -10.0, "max": 10.0, "step": 0.0001, "tooltip": "LORA strength, set to 0.0 to unmerge the LORA"}),
             },
             "optional": {
@@ -385,10 +388,13 @@ class WanVideoLoraSelect:
     RETURN_NAMES = ("lora", )
     FUNCTION = "getlorapath"
     CATEGORY = "WanVideoWrapper"
-    DESCRIPTION = "Select a LoRA model from ComfyUI/models/loras"
+    DESCRIPTION = "Write lora model name"
 
     def getlorapath(self, lora, strength, blocks=None, prev_lora=None, low_mem_load=False):
         loras_list = []
+
+        if not lora.endswith(".safetensors"):
+            lora += ".safetensors"
 
         lora = {
             "path": folder_paths.get_full_path("loras", lora),
@@ -402,6 +408,7 @@ class WanVideoLoraSelect:
 
         loras_list.append(lora)
         return (loras_list,)
+
     
 class WanVideoVACEModelSelect:
     @classmethod
