@@ -378,8 +378,8 @@ class WanVideoLoraSelect:
                 "strength": ("FLOAT", {"default": 1.0, "min": -10.0, "max": 10.0, "step": 0.0001, "tooltip": "LORA strength, set to 0.0 to unmerge the LORA"}),
             },
             "optional": {
-                "prev_lora":("WANVIDLORA", {"default": None, "tooltip": "For loading multiple LoRAs"}),
-                "blocks":("SELECTEDBLOCKS", ),
+                "prev_lora": ("WANVIDLORA", {"default": None, "tooltip": "For loading multiple LoRAs"}),
+                "blocks": ("SELECTEDBLOCKS", ),
                 "low_mem_load": ("BOOLEAN", {"default": False, "tooltip": "Load the LORA model with less VRAM usage, slower loading"}),
             }
         }
@@ -393,6 +393,9 @@ class WanVideoLoraSelect:
     def getlorapath(self, lora, strength, blocks=None, prev_lora=None, low_mem_load=False):
         loras_list = []
 
+        if not lora:  # Burada None ya da "" durumunu kontrol ediyoruz
+            return (prev_lora if prev_lora is not None else [],)
+
         if not lora.endswith(".safetensors"):
             lora += ".safetensors"
 
@@ -403,12 +406,12 @@ class WanVideoLoraSelect:
             "blocks": blocks,
             "low_mem_load": low_mem_load,
         }
+
         if prev_lora is not None:
             loras_list.extend(prev_lora)
 
         loras_list.append(lora)
         return (loras_list,)
-
     
 class WanVideoVACEModelSelect:
     @classmethod
