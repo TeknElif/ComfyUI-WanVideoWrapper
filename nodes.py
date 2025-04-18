@@ -393,8 +393,8 @@ class WanVideoLoraSelect:
     def getlorapath(self, lora, strength, blocks=None, prev_lora=None, low_mem_load=False):
         loras_list = []
 
-        if not lora:  # Burada None ya da "" durumunu kontrol ediyoruz
-            return (prev_lora if prev_lora is not None else [],)
+        if not lora:
+            return ([],)
 
         if not lora.endswith(".safetensors"):
             lora += ".safetensors"
